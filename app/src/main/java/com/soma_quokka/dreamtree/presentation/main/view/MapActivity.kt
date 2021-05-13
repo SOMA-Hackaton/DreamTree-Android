@@ -11,6 +11,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.jakewharton.rxbinding4.widget.textChanges
 import com.soma_quokka.dreamtree.R
+import com.soma_quokka.dreamtree.data.model.StoreList
 import com.soma_quokka.dreamtree.databinding.ActivityMapBinding
 import com.soma_quokka.dreamtree.presentation.base.BaseActivity
 import com.soma_quokka.dreamtree.presentation.main.viewmodel.MapViewModel
@@ -21,7 +22,6 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 
-
 class MapActivity : BaseActivity<ActivityMapBinding, MapViewModel>(R.layout.activity_map) {
     override val viewModel: MapViewModel by viewModel()
 
@@ -30,6 +30,7 @@ class MapActivity : BaseActivity<ActivityMapBinding, MapViewModel>(R.layout.acti
 
     companion object {
         const val TAG = "MapActivity"
+        const val ARG_PARAM = "storeList"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,11 +39,13 @@ class MapActivity : BaseActivity<ActivityMapBinding, MapViewModel>(R.layout.acti
         val bundle = Bundle()
 
         viewModel.getStoreList()
-        viewModel.storeListLiveData.observe(this, Observer {
-            //bundle.putParcelable("storeList", it)
-        })
-
-        supportFragmentManager.beginTransaction().add(R.id.fragment_map, mapViewFragment).commit()
+        viewModel.storeListLiveData.observe(this,
+            {
+                bundle.putParcelable(ARG_PARAM, StoreList(it))
+                mapViewFragment.arguments = bundle
+                supportFragmentManager.beginTransaction().add(R.id.fragment_map, mapViewFragment).commit()
+            }
+        )
 
         // DataBinding
         binding = DataBindingUtil.setContentView<ActivityMapBinding>(
