@@ -1,5 +1,6 @@
 package com.soma_quokka.dreamtree.presentation.main.view
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -14,10 +15,9 @@ import com.jakewharton.rxbinding4.widget.textChanges
 import com.soma_quokka.dreamtree.R
 import com.soma_quokka.dreamtree.adapter.StoreListAdapter
 import com.soma_quokka.dreamtree.data.model.StoreList
-
 import com.soma_quokka.dreamtree.databinding.ActivityMapBinding
 import com.soma_quokka.dreamtree.presentation.base.BaseActivity
-import com.soma_quokka.dreamtree.presentation.main.view.MapViewFragment.Companion.ARG_PARAM
+import com.soma_quokka.dreamtree.presentation.main.view.MapViewFragment.Companion.STORE_ITEM
 import com.soma_quokka.dreamtree.presentation.main.viewmodel.MapViewModel
 import com.soma_quokka.dreamtree.presentation.store_detail.StoreDetailActivity
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -27,18 +27,25 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 
-class MapActivity : BaseActivity<ActivityMapBinding, MapViewModel>(R.layout.activity_map) {
+class MapActivity : BaseActivity<ActivityMapBinding, MapViewModel>(R.layout.activity_map), OnMeterSetListener {
+    companion object {
+        const val TAG = "MapActivity"
+        const val ARG_PARAM = "STORE_LIST"
+    }
+
     override val viewModel: MapViewModel by viewModel()
 
     private val mapViewFragment = MapViewFragment()
     private var compositeDisposable = CompositeDisposable()
     private lateinit var recyclerViewAdapter: StoreListAdapter
 
-    companion object {
-        const val TAG = "MapActivity"
-        val STORE_ITEM = "STORE_ITEM"
+    @SuppressLint("SetTextI18n")
+    override fun onMeterSetListener(meter: Double) {
+        binding.btnSurroundMeter.text = meter.toString()+"m"
+        mapViewFragment.setSurroundMeter(meter)
+        mapViewFragment.setZoom(meter)
     }
-  
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -56,6 +63,11 @@ class MapActivity : BaseActivity<ActivityMapBinding, MapViewModel>(R.layout.acti
 
         binding.btnCurrentPosition.setOnClickListener {
             mapViewFragment.setCurrentPosition()
+        }
+
+        binding.btnSurroundMeter.setOnClickListener {
+            val bottomSheetDialog = BottomSheetDialog()
+            bottomSheetDialog.show(supportFragmentManager, "bottomSheetDialog")
         }
 
 
