@@ -1,5 +1,6 @@
 package com.soma_quokka.dreamtree.presentation.main.view
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -17,15 +18,20 @@ import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.MarkerIcons
 import com.soma_quokka.dreamtree.R
-import com.soma_quokka.dreamtree.data.model.StoreClusterItem
 import com.soma_quokka.dreamtree.data.model.StoreList
+import com.soma_quokka.dreamtree.data.response.StoreResponseItem
 import com.soma_quokka.dreamtree.presentation.main.MapTypeConstant
+import com.soma_quokka.dreamtree.presentation.store_detail.StoreDetailActivity
 import ted.gun0912.clustering.naver.TedNaverClustering
 
 class MapViewFragment : Fragment(), OnMapReadyCallback {
 
+    companion object{
+        val STORE_ITEM = "STORE_ITEM"
+        val ARG_PARAM = "storeList"
+    }
+
     private var storeList: StoreList? = null
-    private val ARG_PARAM = "storeList"
     lateinit var naverMap: NaverMap
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,10 +71,10 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
         marker.position = LatLng(37.58, 126.90)
         marker.map = naverMap
 
-        storeList?.let { getItems(it) }?.let {
-            TedNaverClustering.with<StoreClusterItem>(requireActivity(), naverMap)
+        storeList?.let { it.storeList }?.let {
+            TedNaverClustering.with<StoreResponseItem>(requireActivity(), naverMap)
                 .customMarker { clusterItem ->
-                    Marker(clusterItem.position).apply {
+                    Marker(LatLng(clusterItem.latitude,clusterItem.longitude)).apply {
                         when (clusterItem.type) {
                             storeType.BAKERY -> icon = OverlayImage.fromResource(R.drawable.ic_bakery)
                             storeType.CHINESE_FOOD -> icon = OverlayImage.fromResource(R.drawable.ic_chinese_food)
@@ -80,18 +86,15 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
                     }
 
                 }
+                .markerClickListener {
+                    val intent = Intent(requireContext(), StoreDetailActivity::class.java)
+                    intent.putExtra(STORE_ITEM, it)
+                    startActivity(intent)
+                }
                 .clusterText { it.toString() }
                 .clusterBackground { ContextCompat.getColor(requireContext(),R.color.indigo) }
                 .items(it)
                 .make()
         }
-    }
-
-    private fun getItems(storeResponse: StoreList): MutableList<StoreClusterItem> {
-        var stores = mutableListOf<StoreClusterItem>()
-        for(store in storeResponse.storeList){
-            stores.add(StoreClusterItem(store.latitude, store.longitude, store.name, store.type))
-        }
-        return stores
     }
 }
