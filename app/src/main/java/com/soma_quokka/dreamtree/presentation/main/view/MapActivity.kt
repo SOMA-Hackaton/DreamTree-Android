@@ -11,6 +11,8 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.daimajia.androidanimations.library.Techniques
+import com.daimajia.androidanimations.library.YoYo
 import com.jakewharton.rxbinding4.widget.textChanges
 import com.soma_quokka.dreamtree.R
 import com.soma_quokka.dreamtree.adapter.StoreListAdapter
@@ -156,7 +158,6 @@ class MapActivity : BaseActivity<ActivityMapBinding, MapViewModel>(R.layout.acti
         if (view != null && (ev!!.action === ACTION_UP || MotionEvent.ACTION_MOVE === ev!!.action) &&
             view is EditText && !view.javaClass.name.startsWith("android.webkit.")
         ) {
-
             binding.storeListRecyclerView.visibility = View.GONE
             binding.noResultCard.visibility = View.GONE
 
@@ -186,9 +187,13 @@ class MapActivity : BaseActivity<ActivityMapBinding, MapViewModel>(R.layout.acti
                 }
                 // API 호출 결과 데이터가 있다면 아이템 갱신 적용
                 if (it.size != 0) {
+
+                    YoYo.with(Techniques.SlideInUp)
+                        .duration(700)
+                        .playOn(binding.storeListRecyclerView)
+
                     binding.storeListRecyclerView.visibility = View.VISIBLE
                     binding.noResultCard.visibility = View.GONE
-
                     recyclerViewAdapter.setItem(StoreList(it).storeList)
                 } else {
                     // 만약 아이템이 없다면, '아이템 없음'을 사용자에게 알리는 뷰를 띄워줌

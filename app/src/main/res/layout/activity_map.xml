@@ -64,9 +64,9 @@
                 android:id="@+id/storeListRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="4dp"
-                android:layout_marginEnd="12dp"
+                android:layout_marginEnd="8dp"
                 android:visibility="gone"
                 tools:itemCount="3"
                 tools:listitem="@layout/store_list_item" />
@@ -75,8 +75,8 @@
                 android:id="@+id/noResultCard"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
                 android:layout_marginBottom="32dp"
                 android:background="#ffffff"
                 android:orientation="vertical"
@@ -189,7 +189,6 @@
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>
-
 
     </FrameLayout>
 

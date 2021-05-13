@@ -2,21 +2,22 @@ package com.soma_quokka.dreamtree.presentation.main.view
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.annotation.UiThread
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.naver.maps.geometry.LatLng
-import com.naver.maps.geometry.LatLngBounds
 import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
 import com.naver.maps.map.overlay.CircleOverlay
+import com.naver.maps.map.overlay.InfoWindow
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.MarkerIcons
@@ -28,7 +29,7 @@ import com.soma_quokka.dreamtree.presentation.store_detail.StoreDetailActivity
 import ted.gun0912.clustering.naver.TedNaverClustering
 
 class MapViewFragment : Fragment(), OnMapReadyCallback {
-    companion object{
+    companion object {
         val STORE_ITEM = "STORE_ITEM"
         val ARG_PARAM = "STORE_LIST"
         val storeType = MapTypeConstant
@@ -69,9 +70,6 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
         val cameraPosition = CameraPosition(currentPosition, 15.0)
         naverMap.cameraPosition = cameraPosition
 
-        naverMap.uiSettings.isCompassEnabled = false
-        naverMap.uiSettings.isZoomControlEnabled = false
-
         circleOverlay.center = currentPosition
         circleOverlay.color = R.color.white_indigo
         circleOverlay.radius = 300.0
@@ -83,21 +81,30 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
         marker.position = currentPosition
         marker.map = naverMap
 
+        naverMap.uiSettings.isCompassEnabled = false
+        naverMap.uiSettings.isZoomControlEnabled = false
+
         storeList?.storeList?.let { it ->
+            var storeMarker = Marker()
             TedNaverClustering.with<StoreResponseItem>(requireActivity(), naverMap)
                 .customMarker { clusterItem ->
-                    Marker(LatLng(clusterItem.latitude,clusterItem.longitude)).apply {
+                    Marker(LatLng(clusterItem.latitude, clusterItem.longitude)).apply {
                         when (clusterItem.type) {
-                            storeType.BAKERY -> icon = OverlayImage.fromResource(R.drawable.ic_bakery)
-                            storeType.CHINESE_FOOD -> icon = OverlayImage.fromResource(R.drawable.ic_chinese_food)
-                            storeType.FAST_FOOD -> icon = OverlayImage.fromResource(R.drawable.ic_fast_food)
-                            storeType.JAPANESE_FOOD -> icon = OverlayImage.fromResource(R.drawable.ic_japanese_food)
-                            storeType.KOREAN_FOOD -> icon = OverlayImage.fromResource(R.drawable.ic_korean_food)
-                            storeType.WESTERN_FOOD -> icon = OverlayImage.fromResource(R.drawable.ic_western_food)
+                            storeType.BAKERY -> icon =
+                                OverlayImage.fromResource(R.drawable.ic_bakery)
+                            storeType.CHINESE_FOOD -> icon =
+                                OverlayImage.fromResource(R.drawable.ic_chinese_food)
+                            storeType.FAST_FOOD -> icon =
+                                OverlayImage.fromResource(R.drawable.ic_fast_food)
+                            storeType.JAPANESE_FOOD -> icon =
+                                OverlayImage.fromResource(R.drawable.ic_japanese_food)
+                            storeType.KOREAN_FOOD -> icon =
+                                OverlayImage.fromResource(R.drawable.ic_korean_food)
+                            storeType.WESTERN_FOOD -> icon =
+                                OverlayImage.fromResource(R.drawable.ic_western_food)
                         }
+                        storeMarker = this
                     }
-
-
                 }
                 .markerClickListener {
                     val intent = Intent(requireContext(), StoreDetailActivity::class.java)
@@ -105,25 +112,26 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
                     startActivity(intent)
                 }
                 .clusterText { it.toString() }
-                .clusterBackground { ContextCompat.getColor(requireContext(),R.color.indigo) }
+                .clusterBackground { ContextCompat.getColor(requireContext(), R.color.indigo) }
                 .items(it)
                 .make()
         }
     }
-    fun setCurrentPosition(){
+
+    fun setCurrentPosition() {
         cameraPosition = CameraPosition(currentPosition, 15.0)
         naverMap.cameraPosition = cameraPosition
     }
 
-    fun setSurroundMeter(meter: Double){
-        if(naverMap != null){
+    fun setSurroundMeter(meter: Double) {
+        if (naverMap != null) {
             circleOverlay.radius = meter
             circleOverlay.map = naverMap
         }
     }
 
-    fun setZoom(meter: Double){
-        if(naverMap != null) {
+    fun setZoom(meter: Double) {
+        if (naverMap != null) {
             when (meter) {
                 300.0 -> cameraPosition = CameraPosition(currentPosition, 15.0)
                 400.0 -> cameraPosition = CameraPosition(currentPosition, 14.5)

@@ -95,6 +95,11 @@ dependencies {
         implementation 'gun0912.ted:tedclustering-naver:1.0.2'
     }
 
+    // indicator seekbar
     implementation 'com.google.android.material:material:1.4.0-beta01'
     implementation 'com.github.warkiz.widget:indicatorseekbar:2.1.2'
+
+    // animation
+    implementation 'com.daimajia.androidanimations:library:2.4@aar'
+
 }
