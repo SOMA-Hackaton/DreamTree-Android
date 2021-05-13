@@ -92,4 +92,7 @@ dependencies {
     dependencies {
         implementation 'gun0912.ted:tedclustering-naver:1.0.2'
     }
+
+    implementation 'com.google.android.material:material:1.4.0-beta01'
+    implementation 'com.github.warkiz.widget:indicatorseekbar:2.1.2'
 }
