@@ -89,4 +89,7 @@ dependencies {
     implementation('com.naver.maps:map-sdk:3.11.0') {
         exclude group: 'com.android.support'
     }
+    dependencies {
+        implementation 'gun0912.ted:tedclustering-naver:1.0.2'
+    }
 }
