@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">DreamTree</string>
+    <string name="menu_title_text">대표 메뉴</string>
 </resources>
