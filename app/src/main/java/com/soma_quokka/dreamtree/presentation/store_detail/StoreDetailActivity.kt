@@ -4,7 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
 import com.soma_quokka.dreamtree.R
-import com.soma_quokka.dreamtree.data.model.Store
+import com.soma_quokka.dreamtree.data.response.StoreResponseItem
 import com.soma_quokka.dreamtree.databinding.ActivityStoreDetailBinding
 
 class StoreDetailActivity : AppCompatActivity() {
@@ -24,7 +24,7 @@ class StoreDetailActivity : AppCompatActivity() {
         /**
          * 전달받은 Store Item 정보를 얻음
          */
-        val storeItem: Store = intent.getSerializableExtra(STORE_ITEM) as Store
+        val storeItem: StoreResponseItem = intent.getParcelableExtra(STORE_ITEM)!!
 
         binding.storeName.text = storeItem.name
         binding.storeType.text = storeItem.type

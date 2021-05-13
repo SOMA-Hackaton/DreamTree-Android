@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.jakewharton.rxbinding4.widget.textChanges
 import com.soma_quokka.dreamtree.R
 import com.soma_quokka.dreamtree.adapter.StoreListAdapter
+import com.soma_quokka.dreamtree.data.model.StoreList
+
 import com.soma_quokka.dreamtree.databinding.ActivityMapBinding
 import com.soma_quokka.dreamtree.presentation.base.BaseActivity
 import com.soma_quokka.dreamtree.presentation.main.viewmodel.MapViewModel
@@ -25,8 +27,12 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 
-
 class MapActivity : BaseActivity<ActivityMapBinding, MapViewModel>(R.layout.activity_map) {
+    companion object {
+        const val TAG = "MapActivity"
+        const val ARG_PARAM = "STORE_LIST"
+    }
+
     override val viewModel: MapViewModel by viewModel()
 
     private val mapViewFragment = MapViewFragment()
@@ -37,25 +43,25 @@ class MapActivity : BaseActivity<ActivityMapBinding, MapViewModel>(R.layout.acti
         const val TAG = "MapActivity"
         val STORE_ITEM = "STORE_ITEM"
     }
-
+  
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val bundle = Bundle()
 
+
         viewModel.getSurroundStoreList()
-        viewModel.surroundStoreListLiveData.observe(this, Observer {
-            //bundle.putParcelable("storeList", it)
-        })
-
-        supportFragmentManager.beginTransaction().add(R.id.fragment_map, mapViewFragment).commit()
-
-        // DataBinding
-        binding = DataBindingUtil.setContentView<ActivityMapBinding>(
-            this,
-            R.layout.activity_map
+        viewModel.surroundStoreListLiveData.observe(this,
+            {
+                bundle.putParcelable(ARG_PARAM, StoreList(it))
+                mapViewFragment.arguments = bundle
+                supportFragmentManager.beginTransaction().add(R.id.fragment_map, mapViewFragment).commit()
+            }
         )
-        binding.viewModel = viewModel
+
+        binding.btnCurrentPosition.setOnClickListener {
+            mapViewFragment.setCurrentPosition()
+        }
 
 
         /**

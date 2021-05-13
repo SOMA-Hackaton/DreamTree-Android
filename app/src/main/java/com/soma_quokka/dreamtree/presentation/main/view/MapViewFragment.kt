@@ -1,5 +1,7 @@
 package com.soma_quokka.dreamtree.presentation.main.view
 
+import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,16 +16,22 @@ import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
+import com.naver.maps.map.util.MarkerIcons
 import com.soma_quokka.dreamtree.R
-import com.soma_quokka.dreamtree.data.model.StoreClusterItem
-import com.soma_quokka.dreamtree.data.response.StoreResponse
+import com.soma_quokka.dreamtree.data.model.StoreList
+import com.soma_quokka.dreamtree.data.response.StoreResponseItem
 import com.soma_quokka.dreamtree.presentation.main.MapTypeConstant
+import com.soma_quokka.dreamtree.presentation.store_detail.StoreDetailActivity
 import ted.gun0912.clustering.naver.TedNaverClustering
 
 class MapViewFragment : Fragment(), OnMapReadyCallback {
+    companion object{
+        val STORE_ITEM = "STORE_ITEM"
+        val ARG_PARAM = "STORE_LIST"
+        val storeType = MapTypeConstant
+    }
 
-    private var storeList: StoreResponse? = null
-    private val ARG_PARAM = "storeList"
+    private var storeList: StoreList? = null
     lateinit var naverMap: NaverMap
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,7 +50,7 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
         savedInstanceState: Bundle?
     ): View? {
         arguments?.let {
-            //storeList = it.getParcelable(ARG_PARAM)
+            storeList = it.getParcelable(ARG_PARAM)
         }
 
         return inflater.inflate(R.layout.activity_map, container, false)
@@ -51,21 +59,22 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
     @UiThread
     override fun onMapReady(naverMap: NaverMap) {
         this.naverMap = naverMap
-        val storeType = MapTypeConstant
-        val cameraPosition = CameraPosition(LatLng(37.56, 126.90), 17.0)
+        val currentPosition = LatLng(37.576227432762906, 126.89254733575699)
+        val cameraPosition = CameraPosition(currentPosition, 15.0)
         naverMap.cameraPosition = cameraPosition
 
         naverMap.uiSettings.isCompassEnabled = false
 
         val marker = Marker()
-        marker.icon = OverlayImage.fromResource(R.drawable.ic_baseline_place_24)
-        marker.position = LatLng(37.56, 126.90)
+        marker.icon = MarkerIcons.BLACK
+        marker.iconTintColor = Color.RED
+        marker.position = currentPosition
         marker.map = naverMap
 
-        storeList?.let { getItems(it) }?.let {
-            TedNaverClustering.with<StoreClusterItem>(requireActivity(), naverMap)
+        storeList?.storeList?.let { it ->
+            TedNaverClustering.with<StoreResponseItem>(requireActivity(), naverMap)
                 .customMarker { clusterItem ->
-                    Marker(clusterItem.position).apply {
+                    Marker(LatLng(clusterItem.latitude,clusterItem.longitude)).apply {
                         when (clusterItem.type) {
                             storeType.BAKERY -> icon = OverlayImage.fromResource(R.drawable.ic_bakery)
                             storeType.CHINESE_FOOD -> icon = OverlayImage.fromResource(R.drawable.ic_chinese_food)
@@ -77,18 +86,20 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
                     }
 
                 }
+                .markerClickListener {
+                    val intent = Intent(requireContext(), StoreDetailActivity::class.java)
+                    intent.putExtra(STORE_ITEM, it)
+                    startActivity(intent)
+                }
                 .clusterText { it.toString() }
                 .clusterBackground { ContextCompat.getColor(requireContext(),R.color.indigo) }
                 .items(it)
                 .make()
         }
     }
-
-    private fun getItems(storeResponse: StoreResponse): MutableList<StoreClusterItem> {
-        val stores = mutableListOf<StoreClusterItem>()
-        for(store in storeResponse){
-            stores.add(StoreClusterItem(store.latitude, store.longitude, store.name, store.type))
-        }
-        return stores
+    fun setCurrentPosition(){
+        val currentPosition = LatLng(37.576227432762906, 126.89254733575699)
+        val cameraPosition = CameraPosition(currentPosition, 15.0)
+        naverMap.cameraPosition = cameraPosition
     }
 }
