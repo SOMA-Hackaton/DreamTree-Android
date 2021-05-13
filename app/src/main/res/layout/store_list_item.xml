@@ -26,25 +26,76 @@
                 android:paddingEnd="24dp"
                 android:paddingBottom="16dp">
 
-                <TextView
-                    android:id="@+id/placeName"
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:text="Test"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
+                    android:layout_height="wrap_content">
 
-                <TextView
-                    android:id="@+id/placeCategory"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:text="Test"
-                    android:textSize="18sp" />
+                    <TextView
+                        android:gravity="center"
+                        android:layout_centerVertical="true"
+                        android:id="@+id/storeName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:text="StoreName"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
 
+                    <TextView
+                        android:layout_marginStart="12dp"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@+id/storeName"
+                        android:id="@+id/storeType"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:text="StoreType"
+                        android:textSize="14sp" />
+
+                    <RatingBar
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentEnd="true"
+                        android:numStars="5"
+                        style="@style/Widget.AppCompat.RatingBar.Small"
+                        android:id="@+id/storeRating"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:text="Test"
+                        android:textSize="24sp"
+                        android:textStyle="bold" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_marginTop="4dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:text="서울시 마포구"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <ImageView
+                        app:tint="@color/lb_grey"
+                        android:layout_toLeftOf="@+id/storeDistance"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_baseline_location_on_24"/>
+
+                    <TextView
+                        android:layout_alignParentEnd="true"
+                        android:text="100m"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/storeDistance"/>
+
+                </RelativeLayout>
             </LinearLayout>
 
         </LinearLayout>
