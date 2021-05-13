@@ -7,7 +7,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object NetworkHelper {
-    private const val serverBaseUrl = "http://domain.com/api"
+    private const val serverBaseUrl = "https://dreamtree-dywzy.run.goorm.io/"
 
     var token: String = ""
 
