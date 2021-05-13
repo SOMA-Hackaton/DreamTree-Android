@@ -1,5 +1,6 @@
 package com.soma_quokka.dreamtree.presentation.main.view
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,15 +15,16 @@ import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
+import com.naver.maps.map.util.MarkerIcons
 import com.soma_quokka.dreamtree.R
 import com.soma_quokka.dreamtree.data.model.StoreClusterItem
-import com.soma_quokka.dreamtree.data.response.StoreResponse
+import com.soma_quokka.dreamtree.data.model.StoreList
 import com.soma_quokka.dreamtree.presentation.main.MapTypeConstant
 import ted.gun0912.clustering.naver.TedNaverClustering
 
 class MapViewFragment : Fragment(), OnMapReadyCallback {
 
-    private var storeList: StoreResponse? = null
+    private var storeList: StoreList? = null
     private val ARG_PARAM = "storeList"
     lateinit var naverMap: NaverMap
 
@@ -42,7 +44,7 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
         savedInstanceState: Bundle?
     ): View? {
         arguments?.let {
-            //storeList = it.getParcelable(ARG_PARAM)
+            storeList = it.getParcelable(ARG_PARAM)
         }
 
         return inflater.inflate(R.layout.activity_map, container, false)
@@ -52,14 +54,15 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
     override fun onMapReady(naverMap: NaverMap) {
         this.naverMap = naverMap
         val storeType = MapTypeConstant
-        val cameraPosition = CameraPosition(LatLng(37.56, 126.90), 17.0)
+        val cameraPosition = CameraPosition(LatLng(37.58, 126.90), 14.0)
         naverMap.cameraPosition = cameraPosition
 
         naverMap.uiSettings.isCompassEnabled = false
 
         val marker = Marker()
-        marker.icon = OverlayImage.fromResource(R.drawable.ic_baseline_place_24)
-        marker.position = LatLng(37.56, 126.90)
+        marker.icon = MarkerIcons.BLACK
+        marker.iconTintColor = Color.RED
+        marker.position = LatLng(37.58, 126.90)
         marker.map = naverMap
 
         storeList?.let { getItems(it) }?.let {
@@ -84,9 +87,9 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
-    private fun getItems(storeResponse: StoreResponse): MutableList<StoreClusterItem> {
+    private fun getItems(storeResponse: StoreList): MutableList<StoreClusterItem> {
         var stores = mutableListOf<StoreClusterItem>()
-        for(store in storeResponse){
+        for(store in storeResponse.storeList){
             stores.add(StoreClusterItem(store.latitude, store.longitude, store.name, store.type))
         }
         return stores
