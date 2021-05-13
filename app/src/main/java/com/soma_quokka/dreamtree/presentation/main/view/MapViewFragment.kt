@@ -1,10 +1,12 @@
 package com.soma_quokka.dreamtree.presentation.main.view
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraPosition
@@ -14,13 +16,13 @@ import com.naver.maps.map.OnMapReadyCallback
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
 import com.soma_quokka.dreamtree.R
-import com.soma_quokka.dreamtree.data.model.Store
+import com.soma_quokka.dreamtree.data.model.StoreClusterItem
 import com.soma_quokka.dreamtree.presentation.main.MapTypeConstant
-import java.util.*
+import ted.gun0912.clustering.naver.TedNaverClustering
 
 class MapViewFragment : Fragment(), OnMapReadyCallback {
 
-    val stores = listOf(Store("임시1","일식", 37.5601, 126.9001),Store("임시1", "중식",37.5602, 126.9002))
+    lateinit var naverMap: NaverMap
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,6 +47,7 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
 
     @UiThread
     override fun onMapReady(naverMap: NaverMap) {
+        this.naverMap = naverMap
         val storeType = MapTypeConstant
         val cameraPosition = CameraPosition(LatLng(37.56, 126.90), 17.0)
         naverMap.cameraPosition = cameraPosition
@@ -56,13 +59,30 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
         marker.position = LatLng(37.56, 126.90)
         marker.map = naverMap
 
-        for (store in stores) {
-            val m = Marker()
-            when (store.type) {
+        TedNaverClustering.with<StoreClusterItem>(requireActivity(), naverMap)
+            .customMarker { clusterItem ->
+                Marker(clusterItem.position).apply {
+                    when (clusterItem.type) {
+                        storeType.BAKERY -> icon = OverlayImage.fromResource(R.drawable.ic_bakery)
+                        storeType.CHINESE_FOOD -> icon = OverlayImage.fromResource(R.drawable.ic_chinese_food)
+                        storeType.FAST_FOOD -> icon = OverlayImage.fromResource(R.drawable.ic_fast_food)
+                        storeType.JAPANESE_FOOD -> icon = OverlayImage.fromResource(R.drawable.ic_japanese_food)
+                        storeType.KOREAN_FOOD -> icon = OverlayImage.fromResource(R.drawable.ic_korean_food)
+                        storeType.WESTERN_FOOD -> icon = OverlayImage.fromResource(R.drawable.ic_western_food)
+                    }
+                }
 
             }
-            m.icon = OverlayImage.fromResource(R.drawable.ic_pizza)
-            m.position = LatLng(store.latitude, store.longtitude)
-        }
+            .clusterText { it.toString() }
+            .clusterBackground { ContextCompat.getColor(requireContext(),R.color.indigo) }
+            .items(getItems())
+            .make()
+    }
+
+    private fun getItems(): List<StoreClusterItem> {
+        val stores = listOf(StoreClusterItem(37.5591, 126.9004,"임시1","패스트푸드",""), StoreClusterItem(37.5591, 126.9001,"임시2","한식", ""), StoreClusterItem( 37.5601, 126.9001,"임시3","일식",""),
+            StoreClusterItem(37.5602, 126.9002,"임시4", "중식","")
+        )
+        return stores
     }
 }
