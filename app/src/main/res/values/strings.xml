@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">DreamTree</string>
     <string name="menu_title_text">대표 메뉴</string>
+    <string name="no_result_text">검색 결과가 없습니다</string>
 </resources>

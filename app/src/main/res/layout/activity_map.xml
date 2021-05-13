@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools"
     xmlns:tools="http://schemas.android.com/tools">
 
     <FrameLayout
@@ -8,50 +9,96 @@
         android:layout_height="match_parent"
         tools:context=".presentation.main.view.MapActivity">
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/searchViewLayout"
+        <LinearLayout
+            android:elevation="1dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="32dp"
-            android:layout_marginEnd="8dp"
-            app:cardCornerRadius="18dp"
-            app:cardUseCompatPadding="true">
+            android:orientation="vertical">
 
-            <LinearLayout
+            <androidx.cardview.widget.CardView
+                android:id="@+id/searchViewLayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:elevation="1dp"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="8dp"
+                app:cardCornerRadius="18dp"
+                app:cardUseCompatPadding="true">
 
-                <EditText
-                    android:id="@+id/searchView"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_weight="1"
-                    android:background="@android:color/transparent"
-                    android:drawableStart="@drawable/ic_baseline_search_24"
-                    android:drawablePadding="8dp"
-                    android:gravity="center_vertical"
-                    android:paddingStart="8dp"
-                    android:paddingEnd="8dp"
-                    android:textSize="14sp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:elevation="1dp"
+                    android:orientation="horizontal">
 
-                <ImageButton
-                    android:id="@+id/textClearButton"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_gravity="center"
-                    android:layout_marginHorizontal="12dp"
-                    android:background="@null"
+                    <EditText
+                        android:id="@+id/searchView"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:background="@android:color/transparent"
+                        android:drawableStart="@drawable/ic_baseline_search_24"
+                        android:drawablePadding="8dp"
+                        android:gravity="center_vertical"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
+                        android:textSize="14sp" />
+
+                    <ImageButton
+                        android:id="@+id/textClearButton"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center"
+                        android:layout_marginHorizontal="12dp"
+                        android:background="@null"
+                        android:gravity="center"
+                        android:src="@drawable/ic_baseline_cancel_24"
+                        android:visibility="gone" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="12dp"
+                tools:itemCount="3"
+                android:visibility="gone"
+                tools:listitem="@layout/store_list_item"
+                android:id="@+id/storeListRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/noResultCard"
+                app:cardUseCompatPadding="true"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="32dp"
+                android:background="#ffffff"
+                android:orientation="vertical"
+                app:cardCornerRadius="18dp"
+                app:cardElevation="8dp">
+
+                <LinearLayout
                     android:gravity="center"
-                    android:src="@drawable/ic_baseline_cancel_24"
-                    android:visibility="gone" />
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <TextView
+                        android:text="@string/no_result_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
 
-            </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
-        </androidx.cardview.widget.CardView>
+        </LinearLayout>
+
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/fragment_map"
@@ -79,21 +126,15 @@
     </FrameLayout>
 
     <data>
-
         <import type="android.view.View" />
-
         <import type="androidx.core.content.ContextCompat" />
-
         <import type="android.graphics.Typeface" />
-
         <import type="com.soma_quokka.dreamtree.R" />
-
         <import type="android.app.Application" />
 
         <variable
             name="viewModel"
             type="com.soma_quokka.dreamtree.presentation.main.viewmodel.MapViewModel" />
     </data>
-
 
 </layout>

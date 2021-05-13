@@ -109,7 +109,6 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
                 .make()
         }
     }
-
     fun setCurrentPosition(){
         cameraPosition = CameraPosition(currentPosition, 15.0)
         naverMap.cameraPosition = cameraPosition
