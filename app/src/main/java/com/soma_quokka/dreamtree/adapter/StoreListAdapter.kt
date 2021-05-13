@@ -4,14 +4,15 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.soma_quokka.dreamtree.BR
+import com.soma_quokka.dreamtree.data.model.Store
 import com.soma_quokka.dreamtree.databinding.StoreListItemBinding
-
+/*
 class StoreListAdapter(
 ) : RecyclerView.Adapter<StoreListAdapter.ViewHolder>() {
     private var items: List<Store> = listOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val biding = StoreListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = StoreListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
         return ViewHolder(binding)
     }
@@ -37,4 +38,4 @@ class StoreListAdapter(
         this.items = items
         notifyDataSetChanged()
     }
-}
+}*/
