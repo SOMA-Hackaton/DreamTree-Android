@@ -3,6 +3,7 @@ package com.soma_quokka.dreamtree.presentation.main.viewmodel
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.soma_quokka.dreamtree.data.model.StoreList
 import com.soma_quokka.dreamtree.data.response.StoreResponse
 import com.soma_quokka.dreamtree.network.RemoteDataSourceImpl
 import com.soma_quokka.dreamtree.presentation.base.BaseViewModel
@@ -21,7 +22,7 @@ class MapViewModel : BaseViewModel() {
     val searchResultStoreListLiveData: LiveData<StoreResponse>
         get() = _searchResultStoreListLiveData
 
-    fun getSurroundStoreList(){
+    fun getSurroundStoreList() {
         addDisposable(
             remoteDataSourceImpl.getSurroundStoreList()
                 .applySchedulers()
@@ -29,27 +30,27 @@ class MapViewModel : BaseViewModel() {
                     {
                         _surroundStoreListLiveData.value = it
                         Log.d("test1", it.toString())
-                    },{
+                    }, {
                         Log.d("test2", it.toString())
                     }
                 )
         )
     }
 
-    fun getSearchResultStoreList(){
+    fun getSearchResultStoreList(userQuery: String) {
         addDisposable(
-            remoteDataSourceImpl.getSurroundStoreList()
+            remoteDataSourceImpl.getSearchResultStoreList(userQuery)
                 .applySchedulers()
                 .subscribe(
                     {
                         _searchResultStoreListLiveData.value = it
-                        Log.d("test1", it.toString())
-                    },{
-                        Log.d("test2", it.toString())
+                        Log.d("TEST1", it.toString())
+                    }, {
+                        Log.d("TEST2", it.toString())
                     }
                 )
         )
     }
 
-    
+
 }

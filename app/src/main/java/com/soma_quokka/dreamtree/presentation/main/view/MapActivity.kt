@@ -24,6 +24,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
+import org.koin.android.ext.android.bind
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 
@@ -57,7 +58,8 @@ class MapActivity : BaseActivity<ActivityMapBinding, MapViewModel>(R.layout.acti
             {
                 bundle.putParcelable(ARG_PARAM, StoreList(it))
                 mapViewFragment.arguments = bundle
-                supportFragmentManager.beginTransaction().add(R.id.fragment_map, mapViewFragment).commit()
+                supportFragmentManager.beginTransaction().add(R.id.fragment_map, mapViewFragment)
+                    .commit()
             }
         )
 
@@ -71,12 +73,15 @@ class MapActivity : BaseActivity<ActivityMapBinding, MapViewModel>(R.layout.acti
         }
 
 
+
         /**
          * RecyclerView Adapter 적용
          */
         recyclerViewAdapter = StoreListAdapter {
+            Log.d("ItemClick", "ItemClicked")
             val intent = Intent(this, StoreDetailActivity::class.java)
             intent.putExtra(STORE_ITEM, it)
+            startActivity(intent)
         }
 
         binding.storeListRecyclerView.apply {
@@ -110,26 +115,17 @@ class MapActivity : BaseActivity<ActivityMapBinding, MapViewModel>(R.layout.acti
                     .subscribeOn(Schedulers.io())
                     // 구독을 통해 이벤트 응답 처리
                     .subscribeBy(
-                        onNext = { charSequence ->
-                            Log.d("Rx", "onNext : $charSequence")
-                            // 사용자에 의해 변경된 쿼리(검색어) 기반으로 API 호출
-                            viewModel.getSearchResultStoreList()
-                            viewModel.searchResultStoreListLiveData.observe(
-                                this@MapActivity,
-                                Observer {
-                                    // API 호출 결과 데이터가 있다면 아이템 갱신 적용
-                                    if (it.size != 0){
-                                        runOnUiThread {
-                                            binding.storeListRecyclerView.visibility = View.VISIBLE
-                                            binding.noResultCard.visibility = View.GONE
-                                        }
-                                        recyclerViewAdapter.setItem(it)
-                                    } else{
-                                        // 만약 아이템이 없다면, '아이템 없음'을 사용자에게 알리는 뷰를 띄워줌
-                                        binding.storeListRecyclerView.visibility = View.GONE
-                                        binding.noResultCard.visibility = View.VISIBLE
-                                    }
-                                })
+                        onNext = {
+                            Log.d("Rx", "onNext : $it")
+                            // 사용작 쿼리가 비어있지 않다면 API 호출
+                            runOnUiThread {
+                                if (!it.isNullOrBlank()){
+                                    refreshSearchResultList(it.toString())
+                                }else{
+                                    binding.storeListRecyclerView.visibility = View.GONE
+                                    binding.noResultCard.visibility = View.GONE
+                                }
+                            }
                         },
                         onComplete = {
                             Log.d("Rx", "onComplete")
@@ -156,6 +152,7 @@ class MapActivity : BaseActivity<ActivityMapBinding, MapViewModel>(R.layout.acti
         if (view != null && (ev!!.action === ACTION_UP || MotionEvent.ACTION_MOVE === ev!!.action) &&
             view is EditText && !view.javaClass.name.startsWith("android.webkit.")
         ) {
+
             binding.storeListRecyclerView.visibility = View.GONE
             binding.noResultCard.visibility = View.GONE
 
@@ -171,6 +168,30 @@ class MapActivity : BaseActivity<ActivityMapBinding, MapViewModel>(R.layout.acti
         }
 
         return super.dispatchTouchEvent(ev)
+    }
+
+    private fun refreshSearchResultList(userQuery: String) {
+       // 사용자에 의해 변경된 쿼리(검색어) 기반으로 API 호출
+        viewModel.getSearchResultStoreList(userQuery)
+        Log.d(TAG, "refresh")
+        viewModel.searchResultStoreListLiveData.observe(
+            this@MapActivity,
+            {
+                StoreList(it).storeList.forEach{
+                    Log.d(TAG, it.name)
+                }
+                // API 호출 결과 데이터가 있다면 아이템 갱신 적용
+                if (it.size != 0) {
+                    binding.storeListRecyclerView.visibility = View.VISIBLE
+                    binding.noResultCard.visibility = View.GONE
+
+                    recyclerViewAdapter.setItem(StoreList(it).storeList)
+                } else {
+                    // 만약 아이템이 없다면, '아이템 없음'을 사용자에게 알리는 뷰를 띄워줌
+                    binding.storeListRecyclerView.visibility = View.GONE
+                    binding.noResultCard.visibility = View.VISIBLE
+                }
+            })
     }
 
     override fun onDestroy() {

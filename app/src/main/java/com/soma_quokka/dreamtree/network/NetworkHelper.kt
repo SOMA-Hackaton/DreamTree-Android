@@ -20,6 +20,7 @@ object NetworkHelper {
         .addInterceptor(HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.NONE
         })
+
         .addInterceptor {
             // Request
             val request = it.request()

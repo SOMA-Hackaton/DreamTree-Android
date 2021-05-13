@@ -8,6 +8,8 @@ interface RetrofitService {
     @GET("/")
     fun getSurroundStoreList(): Single<StoreResponse>
 
-    @GET("")
-    fun getSearchResultStoreList(): Single<StoreResponse>
+    @GET("/keyword/")
+    fun getSearchResultStoreList(
+        @Query(value = "storename", encoded = true) userQuery: String
+    ): Single<StoreResponse>
 }
