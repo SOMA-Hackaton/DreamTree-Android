@@ -8,6 +8,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import com.jakewharton.rxbinding4.widget.textChanges
 import com.soma_quokka.dreamtree.R
 import com.soma_quokka.dreamtree.databinding.ActivityMapBinding
@@ -33,6 +34,13 @@ class MapActivity : BaseActivity<ActivityMapBinding, MapViewModel>(R.layout.acti
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val bundle = Bundle()
+
+        viewModel.getStoreList()
+        viewModel.storeListLiveData.observe(this, Observer {
+            //bundle.putParcelable("storeList", it)
+        })
 
         supportFragmentManager.beginTransaction().add(R.id.fragment_map, mapViewFragment).commit()
 

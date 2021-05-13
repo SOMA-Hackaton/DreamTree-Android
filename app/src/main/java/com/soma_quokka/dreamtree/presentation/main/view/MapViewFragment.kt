@@ -1,6 +1,5 @@
 package com.soma_quokka.dreamtree.presentation.main.view
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,11 +16,14 @@ import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
 import com.soma_quokka.dreamtree.R
 import com.soma_quokka.dreamtree.data.model.StoreClusterItem
+import com.soma_quokka.dreamtree.data.response.StoreResponse
 import com.soma_quokka.dreamtree.presentation.main.MapTypeConstant
 import ted.gun0912.clustering.naver.TedNaverClustering
 
 class MapViewFragment : Fragment(), OnMapReadyCallback {
 
+    private var storeList: StoreResponse? = null
+    private val ARG_PARAM = "storeList"
     lateinit var naverMap: NaverMap
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,6 +42,7 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
         savedInstanceState: Bundle?
     ): View? {
         arguments?.let {
+            //storeList = it.getParcelable(ARG_PARAM)
         }
 
         return inflater.inflate(R.layout.activity_map, container, false)
@@ -59,30 +62,33 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
         marker.position = LatLng(37.56, 126.90)
         marker.map = naverMap
 
-        TedNaverClustering.with<StoreClusterItem>(requireActivity(), naverMap)
-            .customMarker { clusterItem ->
-                Marker(clusterItem.position).apply {
-                    when (clusterItem.type) {
-                        storeType.BAKERY -> icon = OverlayImage.fromResource(R.drawable.ic_bakery)
-                        storeType.CHINESE_FOOD -> icon = OverlayImage.fromResource(R.drawable.ic_chinese_food)
-                        storeType.FAST_FOOD -> icon = OverlayImage.fromResource(R.drawable.ic_fast_food)
-                        storeType.JAPANESE_FOOD -> icon = OverlayImage.fromResource(R.drawable.ic_japanese_food)
-                        storeType.KOREAN_FOOD -> icon = OverlayImage.fromResource(R.drawable.ic_korean_food)
-                        storeType.WESTERN_FOOD -> icon = OverlayImage.fromResource(R.drawable.ic_western_food)
+        storeList?.let { getItems(it) }?.let {
+            TedNaverClustering.with<StoreClusterItem>(requireActivity(), naverMap)
+                .customMarker { clusterItem ->
+                    Marker(clusterItem.position).apply {
+                        when (clusterItem.type) {
+                            storeType.BAKERY -> icon = OverlayImage.fromResource(R.drawable.ic_bakery)
+                            storeType.CHINESE_FOOD -> icon = OverlayImage.fromResource(R.drawable.ic_chinese_food)
+                            storeType.FAST_FOOD -> icon = OverlayImage.fromResource(R.drawable.ic_fast_food)
+                            storeType.JAPANESE_FOOD -> icon = OverlayImage.fromResource(R.drawable.ic_japanese_food)
+                            storeType.KOREAN_FOOD -> icon = OverlayImage.fromResource(R.drawable.ic_korean_food)
+                            storeType.WESTERN_FOOD -> icon = OverlayImage.fromResource(R.drawable.ic_western_food)
+                        }
                     }
-                }
 
-            }
-            .clusterText { it.toString() }
-            .clusterBackground { ContextCompat.getColor(requireContext(),R.color.indigo) }
-            .items(getItems())
-            .make()
+                }
+                .clusterText { it.toString() }
+                .clusterBackground { ContextCompat.getColor(requireContext(),R.color.indigo) }
+                .items(it)
+                .make()
+        }
     }
 
-    private fun getItems(): List<StoreClusterItem> {
-        val stores = listOf(StoreClusterItem(37.5591, 126.9004,"임시1","패스트푸드",""), StoreClusterItem(37.5591, 126.9001,"임시2","한식", ""), StoreClusterItem( 37.5601, 126.9001,"임시3","일식",""),
-            StoreClusterItem(37.5602, 126.9002,"임시4", "중식","")
-        )
+    private fun getItems(storeResponse: StoreResponse): MutableList<StoreClusterItem> {
+        var stores = mutableListOf<StoreClusterItem>()
+        for(store in storeResponse){
+            stores.add(StoreClusterItem(store.latitude, store.longitude, store.name, store.type))
+        }
         return stores
     }
 }
