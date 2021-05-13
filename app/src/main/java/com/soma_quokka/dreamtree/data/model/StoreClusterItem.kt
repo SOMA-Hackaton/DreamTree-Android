@@ -10,18 +10,18 @@ data class StoreClusterItem(var position: LatLng) : TedClusterItem {
         return TedLatLng(position.latitude, position.longitude)
     }
 
-    var title: String? = null
+    var name: String? = null
     var type: String? = null
     var snippet: String? = null
 
     constructor(lat: Double, lng: Double) : this(LatLng(lat, lng)) {
-        this.title = null
+        this.name = null
         this.type =  null
         this.snippet = null
     }
 
     constructor(lat: Double, lng: Double, title: String?, type: String?) : this(LatLng(lat, lng)) {
-        this.title = title
+        this.name = title
         this.type =  type
         this.snippet = null
     }
@@ -29,7 +29,7 @@ data class StoreClusterItem(var position: LatLng) : TedClusterItem {
     constructor(lat: Double, lng: Double, title: String?, type: String?, snippet: String?) : this(
         LatLng(lat, lng)
     ) {
-        this.title = title
+        this.name = title
         this.type = type
         this.snippet = snippet
     }
