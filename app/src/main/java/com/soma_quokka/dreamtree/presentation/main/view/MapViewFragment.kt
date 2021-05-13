@@ -76,8 +76,8 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
         circleOverlay.map = naverMap
 
         val marker = Marker()
-        marker.icon = MarkerIcons.BLACK
-        marker.iconTintColor = R.color.indigo
+        marker.icon = OverlayImage.fromResource(R.drawable.ic_current)
+        //marker.iconTintColor = R.color.indigo
         marker.position = currentPosition
         marker.map = naverMap
 
@@ -102,6 +102,8 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
                                 OverlayImage.fromResource(R.drawable.ic_korean_food)
                             storeType.WESTERN_FOOD -> icon =
                                 OverlayImage.fromResource(R.drawable.ic_western_food)
+                            else -> icon =
+                                OverlayImage.fromResource(R.drawable.ic_basic)
                         }
                         storeMarker = this
                     }
