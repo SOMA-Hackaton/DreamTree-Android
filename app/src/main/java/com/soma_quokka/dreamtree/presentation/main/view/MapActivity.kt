@@ -1,5 +1,6 @@
 package com.soma_quokka.dreamtree.presentation.main.view
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
@@ -22,7 +23,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 
-class MapActivity : BaseActivity<ActivityMapBinding, MapViewModel>(R.layout.activity_map) {
+class MapActivity : BaseActivity<ActivityMapBinding, MapViewModel>(R.layout.activity_map), OnMeterSetListener {
     companion object {
         const val TAG = "MapActivity"
         const val ARG_PARAM = "STORE_LIST"
@@ -32,6 +33,13 @@ class MapActivity : BaseActivity<ActivityMapBinding, MapViewModel>(R.layout.acti
 
     private val mapViewFragment = MapViewFragment()
     private var compositeDisposable = CompositeDisposable()
+
+    @SuppressLint("SetTextI18n")
+    override fun onMeterSetListener(meter: Double) {
+        binding.btnSurroundMeter.text = meter.toString()+"m"
+        mapViewFragment.setSurroundMeter(meter)
+        mapViewFragment.setZoom(meter)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +57,11 @@ class MapActivity : BaseActivity<ActivityMapBinding, MapViewModel>(R.layout.acti
 
         binding.btnCurrentPosition.setOnClickListener {
             mapViewFragment.setCurrentPosition()
+        }
+
+        binding.btnSurroundMeter.setOnClickListener {
+            val bottomSheetDialog = BottomSheetDialog()
+            bottomSheetDialog.show(supportFragmentManager, "bottomSheetDialog")
         }
 
         binding.searchView.apply {
