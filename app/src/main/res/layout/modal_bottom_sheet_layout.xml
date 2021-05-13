@@ -11,12 +11,16 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:padding="20dp"
-        android:text="현재 위치에서 조회 반경 선택"/>
+        android:text="원하시는 조회 반경 (단위 : 미터) 을 선택해주세요!"/>
 
     <com.warkiz.widget.IndicatorSeekBar
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="50dp"
         android:id="@+id/seekbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:isb_tick_marks_color="@color/white_indigo"
         app:isb_indicator_color="@color/indigo"
         app:isb_indicator_text_color="@color/white"
         app:isb_indicator_text_size="18sp"
@@ -27,12 +31,11 @@
         app:isb_show_tick_marks_type="oval"
         app:isb_show_tick_texts="true"
         app:isb_thumb_color="@color/indigo"
-        app:isb_thumb_size="20dp"
+        app:isb_thumb_size="25dp"
         app:isb_tick_marks_size="15dp"
-        app:isb_tick_texts_color="@color/indigo"
+        app:isb_tick_texts_color="@color/lb_grey"
         app:isb_tick_texts_size="20sp"
         app:isb_ticks_count="4"
-        app:isb_track_background_color="@color/indigo"
-        app:isb_track_background_size="2dp"
-        app:isb_track_progress_color="@color/indigo"/>
+        app:isb_track_background_size="5dp"
+        app:isb_track_progress_color="@color/lb_grey"/>
 </LinearLayout>

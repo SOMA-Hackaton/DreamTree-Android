@@ -2,6 +2,7 @@ package com.soma_quokka.dreamtree.presentation.main.view
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
@@ -9,7 +10,6 @@ import android.view.MotionEvent.ACTION_UP
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jakewharton.rxbinding4.widget.textChanges
 import com.soma_quokka.dreamtree.R
@@ -24,7 +24,6 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
-import org.koin.android.ext.android.bind
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 
@@ -42,7 +41,7 @@ class MapActivity : BaseActivity<ActivityMapBinding, MapViewModel>(R.layout.acti
 
     @SuppressLint("SetTextI18n")
     override fun onMeterSetListener(meter: Double) {
-        binding.btnSurroundMeter.text = meter.toString()+"m"
+        binding.btnSurroundMeter.text = meter.toString()+"M"
         mapViewFragment.setSurroundMeter(meter)
         mapViewFragment.setZoom(meter)
     }
@@ -67,11 +66,16 @@ class MapActivity : BaseActivity<ActivityMapBinding, MapViewModel>(R.layout.acti
             mapViewFragment.setCurrentPosition()
         }
 
-        binding.btnSurroundMeter.setOnClickListener {
+        binding.cardSurroundMeter.setOnClickListener {
             val bottomSheetDialog = BottomSheetDialog()
             bottomSheetDialog.show(supportFragmentManager, "bottomSheetDialog")
         }
 
+        binding.balanceCheckCard.setOnClickListener {
+            val browserIntent =
+                Intent(Intent.ACTION_VIEW, Uri.parse("https://m.shinhancard.com/mob/MOBFM064N/MOBFM064R01.shc"))
+            startActivity(browserIntent)
+        }
 
 
         /**
@@ -119,9 +123,9 @@ class MapActivity : BaseActivity<ActivityMapBinding, MapViewModel>(R.layout.acti
                             Log.d("Rx", "onNext : $it")
                             // 사용작 쿼리가 비어있지 않다면 API 호출
                             runOnUiThread {
-                                if (!it.isNullOrBlank()){
+                                if (!it.isNullOrBlank()) {
                                     refreshSearchResultList(it.toString())
-                                }else{
+                                } else {
                                     binding.storeListRecyclerView.visibility = View.GONE
                                     binding.noResultCard.visibility = View.GONE
                                 }
@@ -177,7 +181,7 @@ class MapActivity : BaseActivity<ActivityMapBinding, MapViewModel>(R.layout.acti
         viewModel.searchResultStoreListLiveData.observe(
             this@MapActivity,
             {
-                StoreList(it).storeList.forEach{
+                StoreList(it).storeList.forEach {
                     Log.d(TAG, it.name)
                 }
                 // API 호출 결과 데이터가 있다면 아이템 갱신 적용

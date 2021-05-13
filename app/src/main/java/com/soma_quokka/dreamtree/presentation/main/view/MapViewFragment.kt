@@ -70,15 +70,16 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
         naverMap.cameraPosition = cameraPosition
 
         naverMap.uiSettings.isCompassEnabled = false
+        naverMap.uiSettings.isZoomControlEnabled = false
 
         circleOverlay.center = currentPosition
-        circleOverlay.color = R.color.indigo
+        circleOverlay.color = R.color.white_indigo
         circleOverlay.radius = 300.0
         circleOverlay.map = naverMap
 
         val marker = Marker()
         marker.icon = MarkerIcons.BLACK
-        marker.iconTintColor = Color.RED
+        marker.iconTintColor = R.color.indigo
         marker.position = currentPosition
         marker.map = naverMap
 
