@@ -51,6 +51,9 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
         val storeType = MapTypeConstant
         val cameraPosition = CameraPosition(LatLng(37.56, 126.90), 17.0)
         naverMap.cameraPosition = cameraPosition
+
+        naverMap.uiSettings.isCompassEnabled = false
+
         val marker = Marker()
         marker.icon = OverlayImage.fromResource(R.drawable.ic_baseline_place_24)
         marker.position = LatLng(37.56, 126.90)
