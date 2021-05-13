@@ -7,6 +7,6 @@ import android.os.Parcelable
 @SuppressLint("ParcelCreator")
 @Parcelize
 data class Menu(
-    val menu: String,
+    val name: String,
     val price: String
 ) : Parcelable
