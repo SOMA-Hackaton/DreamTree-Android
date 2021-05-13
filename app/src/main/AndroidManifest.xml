@@ -13,8 +13,9 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:usesCleartextTraffic="true"
-        android:theme="@style/Theme.DreamTree">
+        android:theme="@style/Theme.DreamTree"
+        android:usesCleartextTraffic="true">
+        <activity android:name=".presentation.map.view.MapActivity"></activity>
         <activity android:name=".presentation.main.view.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
