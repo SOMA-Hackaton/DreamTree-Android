@@ -5,7 +5,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".presentation.map.view.MapActivity">
+        tools:context=".presentation.main.view.MapActivity">
 
         <Button
             android:id="@+id/button"
@@ -14,7 +14,7 @@
             android:text="Button" />
 
         <fragment
-            android:id="@+id/map_fragment"
+            android:id="@+id/fragment_map"
             android:name="com.naver.maps.map.MapFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
