@@ -10,17 +10,24 @@ import com.soma_quokka.dreamtree.util.applySchedulers
 
 class MapViewModel : BaseViewModel() {
     private val remoteDataSourceImpl = RemoteDataSourceImpl()
-    private val _storeListLiveData = MutableLiveData<StoreResponse>()
-    val storeListLiveData: LiveData<StoreResponse>
-        get() = _storeListLiveData
+    private val _surroundStoreListLiveData = MutableLiveData<StoreResponse>()
+    private val _searchResultStoreListLiveData = MutableLiveData<StoreResponse>()
 
-    fun getStoreList(){
+    // 주변 가맹점 목록 LiveData
+    val surroundStoreListLiveData: LiveData<StoreResponse>
+        get() = _surroundStoreListLiveData
+
+    // 검색결과 가맹점 목록 LiveData
+    val searchResultStoreListLiveData: LiveData<StoreResponse>
+        get() = _searchResultStoreListLiveData
+
+    fun getSurroundStoreList(){
         addDisposable(
-            remoteDataSourceImpl.getStoreList()
+            remoteDataSourceImpl.getSurroundStoreList()
                 .applySchedulers()
                 .subscribe(
                     {
-                        _storeListLiveData.value = it
+                        _surroundStoreListLiveData.value = it
                         Log.d("test1", it.toString())
                     },{
                         Log.d("test2", it.toString())
@@ -28,4 +35,21 @@ class MapViewModel : BaseViewModel() {
                 )
         )
     }
+
+    fun getSearchResultStoreList(){
+        addDisposable(
+            remoteDataSourceImpl.getSurroundStoreList()
+                .applySchedulers()
+                .subscribe(
+                    {
+                        _searchResultStoreListLiveData.value = it
+                        Log.d("test1", it.toString())
+                    },{
+                        Log.d("test2", it.toString())
+                    }
+                )
+        )
+    }
+
+    
 }

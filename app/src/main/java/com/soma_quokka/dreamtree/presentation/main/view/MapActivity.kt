@@ -1,5 +1,6 @@
 package com.soma_quokka.dreamtree.presentation.main.view
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
@@ -9,12 +10,16 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.jakewharton.rxbinding4.widget.textChanges
 import com.soma_quokka.dreamtree.R
+import com.soma_quokka.dreamtree.adapter.StoreListAdapter
 import com.soma_quokka.dreamtree.data.model.StoreList
+
 import com.soma_quokka.dreamtree.databinding.ActivityMapBinding
 import com.soma_quokka.dreamtree.presentation.base.BaseActivity
 import com.soma_quokka.dreamtree.presentation.main.viewmodel.MapViewModel
+import com.soma_quokka.dreamtree.presentation.store_detail.StoreDetailActivity
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -32,14 +37,21 @@ class MapActivity : BaseActivity<ActivityMapBinding, MapViewModel>(R.layout.acti
 
     private val mapViewFragment = MapViewFragment()
     private var compositeDisposable = CompositeDisposable()
+    private lateinit var recyclerViewAdapter: StoreListAdapter
 
+    companion object {
+        const val TAG = "MapActivity"
+        val STORE_ITEM = "STORE_ITEM"
+    }
+  
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val bundle = Bundle()
 
-        viewModel.getStoreList()
-        viewModel.storeListLiveData.observe(this,
+
+        viewModel.getSurroundStoreList()
+        viewModel.surroundStoreListLiveData.observe(this,
             {
                 bundle.putParcelable(ARG_PARAM, StoreList(it))
                 mapViewFragment.arguments = bundle
@@ -49,6 +61,21 @@ class MapActivity : BaseActivity<ActivityMapBinding, MapViewModel>(R.layout.acti
 
         binding.btnCurrentPosition.setOnClickListener {
             mapViewFragment.setCurrentPosition()
+        }
+
+
+        /**
+         * RecyclerView Adapter 적용
+         */
+        recyclerViewAdapter = StoreListAdapter {
+            val intent = Intent(this, StoreDetailActivity::class.java)
+            intent.putExtra(STORE_ITEM, it)
+        }
+
+        binding.storeListRecyclerView.apply {
+            this.adapter = recyclerViewAdapter
+            this.layoutManager = LinearLayoutManager(context)
+            this.setHasFixedSize(true)
         }
 
         binding.searchView.apply {
@@ -76,12 +103,26 @@ class MapActivity : BaseActivity<ActivityMapBinding, MapViewModel>(R.layout.acti
                     .subscribeOn(Schedulers.io())
                     // 구독을 통해 이벤트 응답 처리
                     .subscribeBy(
-                        onNext = {
-                            Log.d("Rx", "onNext : $it")
-                            runOnUiThread {
-//                                viewModel.onChangeQuery(searchQuery = it.toString())
-                            }
-                            // TODO : 바뀐 쿼리 기반으로 API 추가 호출 필요
+                        onNext = { charSequence ->
+                            Log.d("Rx", "onNext : $charSequence")
+                            // 사용자에 의해 변경된 쿼리(검색어) 기반으로 API 호출
+                            viewModel.getSearchResultStoreList()
+                            viewModel.searchResultStoreListLiveData.observe(
+                                this@MapActivity,
+                                Observer {
+                                    // API 호출 결과 데이터가 있다면 아이템 갱신 적용
+                                    if (it.size != 0){
+                                        runOnUiThread {
+                                            binding.storeListRecyclerView.visibility = View.VISIBLE
+                                            binding.noResultCard.visibility = View.GONE
+                                        }
+                                        recyclerViewAdapter.setItem(it)
+                                    } else{
+                                        // 만약 아이템이 없다면, '아이템 없음'을 사용자에게 알리는 뷰를 띄워줌
+                                        binding.storeListRecyclerView.visibility = View.GONE
+                                        binding.noResultCard.visibility = View.VISIBLE
+                                    }
+                                })
                         },
                         onComplete = {
                             Log.d("Rx", "onComplete")
@@ -106,7 +147,11 @@ class MapActivity : BaseActivity<ActivityMapBinding, MapViewModel>(R.layout.acti
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
         val view = currentFocus
         if (view != null && (ev!!.action === ACTION_UP || MotionEvent.ACTION_MOVE === ev!!.action) &&
-            view is EditText && !view.javaClass.name.startsWith( "android.webkit.")) {
+            view is EditText && !view.javaClass.name.startsWith("android.webkit.")
+        ) {
+            binding.storeListRecyclerView.visibility = View.GONE
+            binding.noResultCard.visibility = View.GONE
+
             val scrcoords = IntArray(2)
             view.getLocationOnScreen(scrcoords)
             val x = ev!!.rawX + view.getLeft() - scrcoords[0]

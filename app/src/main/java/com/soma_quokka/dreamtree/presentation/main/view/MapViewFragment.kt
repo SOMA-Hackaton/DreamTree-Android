@@ -97,7 +97,6 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
                 .make()
         }
     }
-
     fun setCurrentPosition(){
         val currentPosition = LatLng(37.576227432762906, 126.89254733575699)
         val cameraPosition = CameraPosition(currentPosition, 15.0)
