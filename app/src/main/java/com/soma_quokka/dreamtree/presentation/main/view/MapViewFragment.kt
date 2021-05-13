@@ -85,7 +85,7 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun getItems(storeResponse: StoreResponse): MutableList<StoreClusterItem> {
-        var stores = mutableListOf<StoreClusterItem>()
+        val stores = mutableListOf<StoreClusterItem>()
         for(store in storeResponse){
             stores.add(StoreClusterItem(store.latitude, store.longitude, store.name, store.type))
         }
