@@ -104,10 +104,18 @@ class MapActivity : BaseActivity<ActivityMapBinding, MapViewModel>(R.layout.acti
                             viewModel.searchResultStoreListLiveData.observe(
                                 this@MapActivity,
                                 Observer {
-                                    runOnUiThread {
-                                        binding.storeListRecyclerView.visibility = View.VISIBLE
+                                    // API 호출 결과 데이터가 있다면 아이템 갱신 적용
+                                    if (it.size != 0){
+                                        runOnUiThread {
+                                            binding.storeListRecyclerView.visibility = View.VISIBLE
+                                            binding.noResultCard.visibility = View.GONE
+                                        }
+                                        recyclerViewAdapter.setItem(it)
+                                    } else{
+                                        // 만약 아이템이 없다면, '아이템 없음'을 사용자에게 알리는 뷰를 띄워줌
+                                        binding.storeListRecyclerView.visibility = View.GONE
+                                        binding.noResultCard.visibility = View.VISIBLE
                                     }
-                                    recyclerViewAdapter.setItem(it)
                                 })
                         },
                         onComplete = {
@@ -136,6 +144,7 @@ class MapActivity : BaseActivity<ActivityMapBinding, MapViewModel>(R.layout.acti
             view is EditText && !view.javaClass.name.startsWith("android.webkit.")
         ) {
             binding.storeListRecyclerView.visibility = View.GONE
+            binding.noResultCard.visibility = View.GONE
 
             val scrcoords = IntArray(2)
             view.getLocationOnScreen(scrcoords)
