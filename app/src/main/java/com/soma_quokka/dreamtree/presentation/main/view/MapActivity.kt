@@ -23,15 +23,15 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 
 class MapActivity : BaseActivity<ActivityMapBinding, MapViewModel>(R.layout.activity_map) {
+    companion object {
+        const val TAG = "MapActivity"
+        const val ARG_PARAM = "STORE_LIST"
+    }
+
     override val viewModel: MapViewModel by viewModel()
 
     private val mapViewFragment = MapViewFragment()
     private var compositeDisposable = CompositeDisposable()
-
-    companion object {
-        const val TAG = "MapActivity"
-        const val ARG_PARAM = "storeList"
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,12 +47,9 @@ class MapActivity : BaseActivity<ActivityMapBinding, MapViewModel>(R.layout.acti
             }
         )
 
-        // DataBinding
-        binding = DataBindingUtil.setContentView<ActivityMapBinding>(
-            this,
-            R.layout.activity_map
-        )
-        binding.viewModel = viewModel
+        binding.btnCurrentPosition.setOnClickListener {
+            mapViewFragment.setCurrentPosition()
+        }
 
         binding.searchView.apply {
             this.hint = "검색어를 입력해주세요"
