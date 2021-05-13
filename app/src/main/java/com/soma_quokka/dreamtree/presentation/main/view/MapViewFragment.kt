@@ -25,10 +25,10 @@ import com.soma_quokka.dreamtree.presentation.store_detail.StoreDetailActivity
 import ted.gun0912.clustering.naver.TedNaverClustering
 
 class MapViewFragment : Fragment(), OnMapReadyCallback {
-
     companion object{
         val STORE_ITEM = "STORE_ITEM"
-        val ARG_PARAM = "storeList"
+        val ARG_PARAM = "STORE_LIST"
+        val storeType = MapTypeConstant
     }
 
     private var storeList: StoreList? = null
@@ -59,8 +59,8 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
     @UiThread
     override fun onMapReady(naverMap: NaverMap) {
         this.naverMap = naverMap
-        val storeType = MapTypeConstant
-        val cameraPosition = CameraPosition(LatLng(37.58, 126.90), 14.0)
+        val currentPosition = LatLng(37.576227432762906, 126.89254733575699)
+        val cameraPosition = CameraPosition(currentPosition, 15.0)
         naverMap.cameraPosition = cameraPosition
 
         naverMap.uiSettings.isCompassEnabled = false
@@ -68,10 +68,10 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
         val marker = Marker()
         marker.icon = MarkerIcons.BLACK
         marker.iconTintColor = Color.RED
-        marker.position = LatLng(37.58, 126.90)
+        marker.position = currentPosition
         marker.map = naverMap
 
-        storeList?.let { it.storeList }?.let {
+        storeList?.storeList?.let { it ->
             TedNaverClustering.with<StoreResponseItem>(requireActivity(), naverMap)
                 .customMarker { clusterItem ->
                     Marker(LatLng(clusterItem.latitude,clusterItem.longitude)).apply {
@@ -96,5 +96,11 @@ class MapViewFragment : Fragment(), OnMapReadyCallback {
                 .items(it)
                 .make()
         }
+    }
+
+    fun setCurrentPosition(){
+        val currentPosition = LatLng(37.576227432762906, 126.89254733575699)
+        val cameraPosition = CameraPosition(currentPosition, 15.0)
+        naverMap.cameraPosition = cameraPosition
     }
 }
