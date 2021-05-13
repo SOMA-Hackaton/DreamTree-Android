@@ -12,6 +12,10 @@ class StoreListAdapter(
 ) : RecyclerView.Adapter<StoreListAdapter.ViewHolder>() {
     private var items: List<StoreResponseItem> = listOf()
 
+    companion object{
+        const val LIMIT = 3
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding =
             StoreListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -23,7 +27,11 @@ class StoreListAdapter(
     }
 
     override fun getItemCount(): Int {
-        return items.size
+        if(items.size > LIMIT){
+            return 3
+        }else{
+            return items.size
+        }
     }
 
     inner class ViewHolder(
@@ -42,11 +50,10 @@ class StoreListAdapter(
         }
     }
 
-    fun setItem(items: StoreResponse) {
+    fun setItem(items: ArrayList<StoreResponseItem>) {
         this.items = items
         notifyDataSetChanged()
     }
 
-    // TODO("해당 가맹점 간의 거리 계산")
-    fun getDistance() {}
+
 }
