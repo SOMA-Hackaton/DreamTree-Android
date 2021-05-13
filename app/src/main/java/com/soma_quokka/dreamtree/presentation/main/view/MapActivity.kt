@@ -15,10 +15,9 @@ import com.jakewharton.rxbinding4.widget.textChanges
 import com.soma_quokka.dreamtree.R
 import com.soma_quokka.dreamtree.adapter.StoreListAdapter
 import com.soma_quokka.dreamtree.data.model.StoreList
-
 import com.soma_quokka.dreamtree.databinding.ActivityMapBinding
 import com.soma_quokka.dreamtree.presentation.base.BaseActivity
-import com.soma_quokka.dreamtree.presentation.main.view.MapViewFragment.Companion.ARG_PARAM
+import com.soma_quokka.dreamtree.presentation.main.view.MapViewFragment.Companion.STORE_ITEM
 import com.soma_quokka.dreamtree.presentation.main.viewmodel.MapViewModel
 import com.soma_quokka.dreamtree.presentation.store_detail.StoreDetailActivity
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -38,6 +37,7 @@ class MapActivity : BaseActivity<ActivityMapBinding, MapViewModel>(R.layout.acti
 
     private val mapViewFragment = MapViewFragment()
     private var compositeDisposable = CompositeDisposable()
+    private lateinit var recyclerViewAdapter: StoreListAdapter
 
     @SuppressLint("SetTextI18n")
     override fun onMeterSetListener(meter: Double) {
