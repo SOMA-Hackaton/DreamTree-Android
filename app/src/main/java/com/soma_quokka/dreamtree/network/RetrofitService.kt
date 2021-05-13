@@ -1,11 +1,13 @@
 package com.soma_quokka.dreamtree.network
 
-import okhttp3.RequestBody
-import retrofit2.Call
-import retrofit2.Callback
+import com.soma_quokka.dreamtree.data.response.StoreResponse
+import io.reactivex.rxjava3.core.Single
 import retrofit2.http.*
 
 interface RetrofitService {
     @GET("/api/vi")
     fun getSurroundPlace()
+
+    @GET("/")
+    fun getStoreList() : Single<StoreResponse>
 }

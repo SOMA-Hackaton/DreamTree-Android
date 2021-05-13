@@ -1,13 +1,18 @@
 package com.soma_quokka.dreamtree.network
 
+import android.os.Handler.createAsync
 import android.util.Log
+import androidx.core.os.HandlerCompat.createAsync
+import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
+import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
+
 import retrofit2.converter.gson.GsonConverterFactory
 
 object NetworkHelper {
-    private const val serverBaseUrl = "https://dreamtree-dywzy.run.goorm.io/"
+    private const val serverBaseUrl = "https://dreamtree-dywzy.run.goorm.io"
 
     var token: String = ""
 
@@ -33,11 +38,13 @@ object NetworkHelper {
             response
         }.build()
 
+    private val gson = GsonBuilder().setLenient().create()
 
     private val retrofit = Retrofit.Builder()
         .baseUrl(serverBaseUrl)
         .client(okHttpClient)
-        .addConverterFactory(GsonConverterFactory.create())
+        .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
+        .addConverterFactory(GsonConverterFactory.create(gson))
         .build()
 
     val retrofitService: RetrofitService = retrofit.create(RetrofitService::class.java)
