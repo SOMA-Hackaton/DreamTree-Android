@@ -2,7 +2,11 @@ package com.soma_quokka.dreamtree.presentation.main.view
 
 import android.os.Bundle
 import android.util.Log
+import android.view.MotionEvent
+import android.view.MotionEvent.ACTION_UP
 import android.view.View
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import androidx.databinding.DataBindingUtil
 import com.jakewharton.rxbinding4.widget.textChanges
 import com.soma_quokka.dreamtree.R
@@ -16,11 +20,16 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 
+
 class MapActivity : BaseActivity<ActivityMapBinding, MapViewModel>(R.layout.activity_map) {
     override val viewModel: MapViewModel by viewModel()
 
     private val mapViewFragment = MapViewFragment()
     private var compositeDisposable = CompositeDisposable()
+
+    companion object {
+        const val TAG = "MapActivity"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,6 +85,32 @@ class MapActivity : BaseActivity<ActivityMapBinding, MapViewModel>(R.layout.acti
             // CompositeDisposable 에 추가
             compositeDisposable.add(searchEditTextSubscription)
         }
+
+        // ClearButton 눌렀을 때 쿼리 Clear
+        binding.textClearButton.setOnClickListener {
+            binding.searchView.text.clear()
+        }
+    }
+
+    /**
+     * 키보드 이외의 영역을 터치했을 때, 키보드를 숨기는 동작
+     */
+    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+        val view = currentFocus
+        if (view != null && (ev!!.action === ACTION_UP || MotionEvent.ACTION_MOVE === ev!!.action) &&
+            view is EditText && !view.javaClass.name.startsWith( "android.webkit.")) {
+            val scrcoords = IntArray(2)
+            view.getLocationOnScreen(scrcoords)
+            val x = ev!!.rawX + view.getLeft() - scrcoords[0]
+            val y = ev!!.rawY + view.getTop() - scrcoords[1]
+            if (x < view.getLeft() || x > view.getRight() || y < view.getTop() || y > view.getBottom()) (this.getSystemService(
+                INPUT_METHOD_SERVICE
+            ) as InputMethodManager).hideSoftInputFromWindow(
+                this.window.decorView.applicationWindowToken, 0
+            )
+        }
+
+        return super.dispatchTouchEvent(ev)
     }
 
     override fun onDestroy() {
