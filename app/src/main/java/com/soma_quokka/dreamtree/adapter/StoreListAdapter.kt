@@ -2,10 +2,7 @@ package com.soma_quokka.dreamtree.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
-import com.soma_quokka.dreamtree.BR
-import com.soma_quokka.dreamtree.data.model.Store
 import com.soma_quokka.dreamtree.data.response.StoreResponse
 import com.soma_quokka.dreamtree.data.response.StoreResponseItem
 import com.soma_quokka.dreamtree.databinding.StoreListItemBinding

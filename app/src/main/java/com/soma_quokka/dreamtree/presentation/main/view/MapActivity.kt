@@ -8,7 +8,6 @@ import android.view.MotionEvent.ACTION_UP
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jakewharton.rxbinding4.widget.textChanges
@@ -18,6 +17,7 @@ import com.soma_quokka.dreamtree.data.model.StoreList
 
 import com.soma_quokka.dreamtree.databinding.ActivityMapBinding
 import com.soma_quokka.dreamtree.presentation.base.BaseActivity
+import com.soma_quokka.dreamtree.presentation.main.view.MapViewFragment.Companion.ARG_PARAM
 import com.soma_quokka.dreamtree.presentation.main.viewmodel.MapViewModel
 import com.soma_quokka.dreamtree.presentation.store_detail.StoreDetailActivity
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -28,11 +28,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 
 class MapActivity : BaseActivity<ActivityMapBinding, MapViewModel>(R.layout.activity_map) {
-    companion object {
-        const val TAG = "MapActivity"
-        const val ARG_PARAM = "STORE_LIST"
-    }
-
     override val viewModel: MapViewModel by viewModel()
 
     private val mapViewFragment = MapViewFragment()

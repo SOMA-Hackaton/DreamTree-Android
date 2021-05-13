@@ -14,15 +14,18 @@
         <ImageView
             android:id="@+id/storeImage"
             android:layout_width="match_parent"
-            android:layout_height="230dp"
+            android:layout_height="250dp"
             android:contentDescription="storeRepresentationImage" />
 
         <TextView
+            android:maxLength="17"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:id="@+id/storeName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
-            android:layout_marginTop="120dp"
+            android:layout_marginTop="180dp"
             android:maxWidth="280dp"
             android:text="storeName"
             android:textColor="#FFFFFF"
@@ -47,7 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/storeName"
             android:layout_marginLeft="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:layout_marginRight="16dp"
             android:background="#ffffff"
             android:elevation="8dp"
@@ -117,24 +120,26 @@
                     android:id="@+id/location_icon"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
-                    android:layout_marginStart="24dp"
+                    android:layout_marginStart="18dp"
                     android:src="@drawable/ic_baseline_location_on_24" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
                     android:orientation="vertical">
 
 
                     <TextView
-                        android:id="@+id/storeLocation"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:id="@+id/storeAddress"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:gravity="center"
                         android:text="storeLocation"
-                        android:textSize="18sp"
+                        android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -143,7 +148,7 @@
                         android:layout_weight="1"
                         android:gravity="center"
                         android:text="탭하여 지도를 펼칩니다"
-                        android:textSize="16sp" />
+                        android:textSize="14sp" />
 
 
                 </LinearLayout>
@@ -175,24 +180,23 @@
                     android:id="@+id/phone_image"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
-                    android:layout_marginStart="24dp"
+                    android:layout_marginStart="18dp"
                     android:src="@drawable/ic_baseline_phone_24" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
                     android:orientation="vertical">
-
 
                     <TextView
                         android:id="@+id/storePhoneNumber"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:gravity="center"
                         android:text="storePhoneNumber"
-                        android:textSize="18sp"
+                        android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -201,7 +205,7 @@
                         android:layout_weight="1"
                         android:gravity="center"
                         android:text="탭하여 다이얼로 이동합니다"
-                        android:textSize="16sp" />
+                        android:textSize="14sp" />
 
                 </LinearLayout>
 
