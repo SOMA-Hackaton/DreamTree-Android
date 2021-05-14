@@ -1,3 +1,4 @@
+<h3 align="center">🏆 제 12기 SW 마에스트로 해커톤 2등 수상 🏆</h3>
 <h1 align="center">🌳 DreamTree 🌳</h1>
 
 <p align="center">
