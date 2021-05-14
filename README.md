@@ -75,6 +75,46 @@
 - **위치기반 가맹점탐색** 
 <img width="1680" height="500" alt="메뉴없음" src="https://user-images.githubusercontent.com/43667316/118197278-921faa00-b489-11eb-9b47-43968c3f69be.gif">
 
+# Server
+
+## **💬 Language**
+
+`Javascript`
+
+## **🔎 Architecture**
+
+`REST`
+
+## **🛠️ Technical Stack**
+
+`Node.js` `Express` `mongoDB` `naverMaps-api-Geocoding`
+
+## 💻 **APIs**
+
+### 1. 꿈나무 카드 가맹점 전체 조회 쿼리
+
+    index router를 통해 마포구에 있는 가게들의 전체 데이터를 받아옵니다.
+    공공데이터 '꿈나무카드가맹점 현황'과 naver-Maps-Geocoding으로 데이터 생성
+
+- **HTTP Method:** `GET` 
+- **Endpoint:** `https://dreamtree-dywzy.run.goorm.io/`
+
+### 2. 위경도 기반 주변 가맹점 정보 쿼리
+
+    위치 정보 (위도, 경도, 거리)를 전달하여 현재 위치로부터 
+    거리 안에 있는 모든 가게 들 중 가까운 가게부터 데이터를 받아옵니다.  
+
+- **HTTP Method:** `GET` 
+- **Endpoint:** `https://dreamtree-dywzy.run.goorm.io/location?latitude={latitude}&logitude={logitude}&distance={distance}`
+
+### 3. 키워드(업체명) 검색 기반 가맹점 정보 쿼리
+
+    업체명 중 일부를 쿼리 파라미터로 전달하여
+    가맹점 정보를 받아옵니다(검색 기능).
+
+- **HTTP Method:** `GET` 
+- **Endpoint:** `https://dreamtree-dywzy.run.goorm.io/keyword?storename={storename}`
+
 # ✋ Part
 |Part|Name|
 |------|---|
